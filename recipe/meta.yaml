@@ -58,9 +58,9 @@ test:
     # also skip hyperparameter optimization tests because of `KeyError: 'radam_buffer'`, see https://discuss.pytorch.org/t/keyerror-radam-buffer/171424
     # Skip testing on s390x because of missing fastparquet and pyarrow packages.
     # Skip testing on osx64 because of Segmentation fault: 11.
-    - pytest tests -vv -k "not (test_integration[multivariate-quantiles] or test_mqf2_loss or test_hyperparameter_optimization_integration[True])"  # [not (s390x or (osx and x86_64))]
+    - pytest tests -vv -k "not (test_integration[multivariate-quantiles] or test_mqf2_loss or test_hyperparameter_optimization_integration[True])"  # [not (s390x or win or (osx and x86_64))]
     # Skip test_MultivariateNormalDistributionLoss and test_integration on win64: `RuntimeError: Calling torch.linalg.cholesky on a CPU tensor requires compiling PyTorch with LAPACK.` 
-    - pytest tests -vv -k "not (test_integration[multivariate-quantiles] or test_mqf2_loss or test_hyperparameter_optimization_integration[True] or test_MultivariateNormalDistributionLoss or test_integration)"  # [not win]
+    - pytest tests -vv -k "not (test_integration[multivariate-quantiles] or test_mqf2_loss or test_hyperparameter_optimization_integration[True] or test_MultivariateNormalDistributionLoss or test_integration)"  # [win]
 
 about:
   home: https://github.com/jdb78/pytorch-forecasting
