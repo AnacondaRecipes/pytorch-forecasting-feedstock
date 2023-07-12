@@ -6,8 +6,11 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/p/pytorch_forecasting/pytorch_forecasting-{{ version }}.tar.gz
-  sha256: 069af34c17eea2edf5c11c79931097427b88cef8a862457818a03464260e5534
+  # Using github archive to test the package
+  url: https://github.com/jdb78/pytorch-forecasting/archive/refs/tags/v0.10.3.tar.gz
+  sha256: 026a0498cd2444e38bb7db4c998d1dda5ee4c5e6418cce9d825eae06f892a1c6
+  patches:
+    - fix_versions.patch
 
 build:
   number: 0
@@ -25,7 +28,7 @@ requirements:
     - optuna >=2.3.0
     - pandas >=1.3.0
     - python
-    - pytorch >=1.7
+    - pytorch >=1.7,<2.0
     - pytorch-lightning >=1.2.4
     - scikit-learn >=0.24.0,<1.2
     - scipy >=1.8
@@ -34,10 +37,23 @@ requirements:
 test:
   imports:
     - pytorch_forecasting
+  source_files:
+    - tests
   requires:
+    - fastparquet
+    - networkx
+    # Use numpy <1.24 to avoid error numpy hasn't np.float 
+    - numpy <1.24
     - pip
+    - pyarrow
+    - pytest
+    - requests
+    - tensorboard
   commands: 
     - pip check
+    # Skip tests because of missing cpflows, 
+    # also skip hyperparameter optimization tests because of `KeyError: 'radam_buffer'`, see https://discuss.pytorch.org/t/keyerror-radam-buffer/171424
+    - pytest tests -vv -k "not (test_integration[multivariate-quantiles] or test_mqf2_loss or test_hyperparameter_optimization_integration[True])"
 
 about:
   home: https://github.com/jdb78/pytorch-forecasting
