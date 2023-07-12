@@ -6,7 +6,6 @@ package:
   version: {{ version }}
 
 source:
-  # Using github archive to test the package
   url: https://github.com/jdb78/pytorch-forecasting/archive/refs/tags/v0.10.3.tar.gz
   sha256: 026a0498cd2444e38bb7db4c998d1dda5ee4c5e6418cce9d825eae06f892a1c6
   patches:
