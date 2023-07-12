@@ -13,7 +13,8 @@ source:
 
 build:
   number: 0
-  skip: True  # [py<38 or py>310]
+  # pyarrow and fastparquet as test dependencies are not available on s390x
+  skip: True  # [py<38 or py>310 or s390x]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
@@ -26,7 +27,7 @@ requirements:
     - poetry-core 1.5.1
     - poetry-dynamic-versioning 0.23.0
   run:
-    - matplotlib-base
+    - matplotlib-base >=3.3.1
     - optuna >=2.3.0
     - pandas >=1.3.0
     - python
@@ -42,23 +43,20 @@ test:
   source_files:
     - tests
   requires:
-    - fastparquet  # [not s390x]
     - networkx
     # Use numpy <1.24 to avoid error numpy hasn't np.float 
     - numpy <1.24
     - pip
-    - pyarrow  # [not s390x]
     - pytest
     - requests
-    - tensorboard  # [not s390x]
+    - tensorboard
   commands: 
     # Disable pip check on win64 because of tensorboard 2.10.0 has requirement protobuf<3.20,>=3.9.2, but you have protobuf 3.20.3.
     - pip check  # [not win]
-    # Skip tests because of missing cpflows, 
-    # also skip hyperparameter optimization tests because of `KeyError: 'radam_buffer'`, see https://discuss.pytorch.org/t/keyerror-radam-buffer/171424
+    # Skip tests because of missing cpflows, also skip hyperparameter optimization tests because of `KeyError: 'radam_buffer'`, see https://discuss.pytorch.org/t/keyerror-radam-buffer/171424
     # Skip testing on s390x because of missing fastparquet and pyarrow packages.
     # TODO: Skip testing on osx64 because of Segmentation fault: 11.
-    - pytest tests -vv -k "not (test_integration[multivariate-quantiles] or test_mqf2_loss or test_hyperparameter_optimization_integration[True])"  # [not (s390x or win)]
+    - pytest tests -vv -k "not (test_integration[multivariate-quantiles] or test_mqf2_loss or test_hyperparameter_optimization_integration[True])"  # [not win]
     # Skip test_MultivariateNormalDistributionLoss and test_integration on win64: `RuntimeError: Calling torch.linalg.cholesky on a CPU tensor requires compiling PyTorch with LAPACK.` 
     - pytest tests -vv -k "not (test_integration[multivariate-quantiles] or test_mqf2_loss or test_hyperparameter_optimization_integration[True] or test_MultivariateNormalDistributionLoss or test_integration)"  # [win]
 
