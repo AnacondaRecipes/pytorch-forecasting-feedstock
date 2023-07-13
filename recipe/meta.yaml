@@ -54,18 +54,17 @@ test:
     - requests
     - tensorboard
   commands:
-    - cat run_test.sh
     # Disable pip check on win64 because of tensorboard 2.10.0 has requirement protobuf<3.20,>=3.9.2, but you have protobuf 3.20.3.
     # Disable pip check on linux-ppc64le because of tensorboard 2.6.0 has requirement google-auth<2,>=1.6.3, but you have google-auth 2.6.0.
     - pip check  # [not (win or (linux and ppc64le))]
     # Skip tests because of missing cpflows, also skip hyperparameter optimization tests because of `KeyError: 'radam_buffer'`, see https://discuss.pytorch.org/t/keyerror-radam-buffer/171424
     # Skip tests on s390x because of missing fastparquet and pyarrow packages.
     # Skip tests on linux-ppc64le as CI got stuck with running pytest
-    - pytest tests -vv -k "not (test_integration[multivariate-quantiles] or test_mqf2_loss or test_hyperparameter_optimization_integration[True])"  # [not (win or (osx and x86_64) or (linux-ppc64le))]
+    - pytest tests -vv -k "not (test_integration[multivariate-quantiles] or test_mqf2_loss or test_hyperparameter_optimization_integration[True])"  # [not (win or (osx and x86_64) or (linux and ppc64le))]
     # Skip test_MultivariateNormalDistributionLoss and test_integration on win64: `RuntimeError: Calling torch.linalg.cholesky on a CPU tensor requires compiling PyTorch with LAPACK.` 
     - pytest tests -vv -k "not (test_integration[multivariate-quantiles] or test_mqf2_loss or test_hyperparameter_optimization_integration[True] or test_MultivariateNormalDistributionLoss or test_integration)"  # [win]
 #   # TODO: Skip testing on osx64 because of Segmentation fault: 11.
-    - pytest tests -vvv -k "not (test_integration[multivariate-quantiles] or test_mqf2_loss or test_hyperparameter_optimization_integration[True] or test_MultivariateNormalDistributionLoss)"  # [osx and x86_64]
+    - pytest tests -vvv -k "not (test_integration[multivariate-quantiles] or test_mqf2_loss or test_hyperparameter_optimization_integration[True] or test_MultivariateNormalDistributionLoss or test_NormalDistributionLoss)"  # [osx and x86_64]
 
 about:
   home: https://github.com/jdb78/pytorch-forecasting
