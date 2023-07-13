@@ -38,6 +38,9 @@ requirements:
     - scipy >=1.8
     - statsmodels
 
+# Some tests take alot of memory, and seem to cause segfaults when memory runs out
+{% set test_cpus = 1 %}
+
 test:
   imports:
     - pytorch_forecasting
@@ -66,7 +69,7 @@ test:
     # Skip test_MultivariateNormalDistributionLoss and test_integration on win64: `RuntimeError: Calling torch.linalg.cholesky on a CPU tensor requires compiling PyTorch with LAPACK.` 
     - pytest tests -vv -k "not (test_integration[multivariate-quantiles] or test_mqf2_loss or test_hyperparameter_optimization_integration[True] or test_MultivariateNormalDistributionLoss or test_integration)"  # [win]
 #   # TODO: Skip testing on osx64 because of Segmentation fault: 11.
-    - pytest tests --timeout 300 -n {{ test_cpus }} --vvv -k "not (test_integration[multivariate-quantiles] or test_mqf2_loss or test_hyperparameter_optimization_integration[True] or test_MultivariateNormalDistributionLoss or test_NormalDistributionLoss or test_GroupNormalizer or test_LogNormalDistributionLoss or test_NegativeBinomialDistributionLoss)"  # [osx and x86_64]
+    - pytest tests --timeout 300 -n {{ test_cpus }} --vvv -k "not (test_MultivariateNormalDistributionLoss or test_NormalDistributionLoss or test_GroupNormalizer or test_LogNormalDistributionLoss or test_NegativeBinomialDistributionLoss)"  # [osx and x86_64]
 
 about:
   home: https://github.com/jdb78/pytorch-forecasting
