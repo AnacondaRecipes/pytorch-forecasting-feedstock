@@ -52,7 +52,7 @@ test:
     - pytest
     - pyarrow
     - requests
-    - tensorboard
+    - tensorboardx
     - pytest-sugar
     - pytest-xdist
   commands:
