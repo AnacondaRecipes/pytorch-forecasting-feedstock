@@ -49,7 +49,7 @@ test:
     # Use numpy <1.24 to avoid error numpy hasn't np.float 
     - numpy <1.24
     - pip
-    - pytest
+    - pytest <7
     - pyarrow
     - requests
     - tensorboard
