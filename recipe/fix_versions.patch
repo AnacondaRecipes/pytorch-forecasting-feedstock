@@ -16,7 +16,7 @@ index 6844a3d..38f3b09 100644
  name = "pytorch_forecasting"
  readme = "README.md"  # Markdown files are supported
 -version = "0.0.0"  # is being replaced automatically
-+version = "0.10.3"  # is being replaced automatically
++version = "0.10.3"
  
  authors = ["Jan Beitner"]
  classifiers = [
