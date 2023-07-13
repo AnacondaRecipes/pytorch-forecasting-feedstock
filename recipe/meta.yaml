@@ -49,14 +49,12 @@ test:
     # Use numpy <1.24 to avoid error numpy hasn't np.float 
     - numpy <1.24
     - pip
-    - pytest <7
+    - pytest
     - pyarrow
     - requests
     - tensorboard
     - pytest-sugar
     - pytest-xdist
-    - llvm-openmp  14.0.6  # [osx and x86_64]
-    - openssl 1.1.1u  # [osx and x86_64]
   commands:
     # Disable pip check on win64 because of tensorboard 2.10.0 has requirement protobuf<3.20,>=3.9.2, but you have protobuf 3.20.3.
     # Disable pip check on linux-ppc64le because of tensorboard 2.6.0 has requirement google-auth<2,>=1.6.3, but you have google-auth 2.6.0.
