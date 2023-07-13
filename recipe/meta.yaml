@@ -31,8 +31,7 @@ requirements:
     - optuna >=2.3.0
     - pandas >=1.3.0
     - python
-    - pytorch >=1.7,<1.13.0  # [osx and x86_64]
-    - pytorch >=1.7,<2.0  # [not (osx and x86_64)]
+    - pytorch >=1.7,<2.0
     # In pytorch-lightning v2.0.0 module named 'pytorch_lightning.core.lightning' was removed
     - pytorch-lightning >=1.2.4,<2.0.0
     - scikit-learn >=0.24.0,<1.2
@@ -54,6 +53,8 @@ test:
     - pyarrow
     - requests
     - tensorboard
+    - openssl 1.1.1  # [osx and x86_64]
+    - urllib3 >=2.0.0
   commands:
     - cat run_test.sh
     # Disable pip check on win64 because of tensorboard 2.10.0 has requirement protobuf<3.20,>=3.9.2, but you have protobuf 3.20.3.
