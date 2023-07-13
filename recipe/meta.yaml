@@ -22,11 +22,13 @@ requirements:
     - m2-patch  # [win]
     - patch     # [not win]
   host:
+    # llvm-openmp 14.0.6 added here only for intel-openmp <20.23.1 compatibility on osx-64. 
+    # Check if the issue persists with new releases
+    - llvm-openmp 14.0.6  # [osx and x86_64]
     - pip
-    - python
     - poetry-core 1.5.1
     - poetry-dynamic-versioning 0.23.0
-    - llvm-openmp 14.0.6  # [osx]
+    - python
   run:
     - matplotlib-base >=3.3.1
     - optuna >=2.3.0
@@ -39,12 +41,10 @@ requirements:
     - scipy >=1.8
     - statsmodels
   run_constrained:
-    # intel-openmp 2023.1 and llvm-openmp 14.0.6 appear not be compatible
-    # leading to segfault in test_pairwise_distances_reduction.py::test_sqeuclidean_row_norms[42-float64-8-5-100]
+    # intel-openmp 2023.1 and llvm-openmp 14.0.6 appear not be compatible on osx-64
+    # leading to segfault in a lot of tests.
+    # Check if the issue persists with new releases
     - intel-openmp <2023.1  # [osx and x86_64]
-
-# Some tests take alot of memory, and seem to cause segfaults when memory runs out
-{% set test_cpus = 1 %}
 
 test:
   imports:
