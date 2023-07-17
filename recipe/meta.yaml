@@ -22,14 +22,17 @@ requirements:
     - m2-patch  # [win]
     - patch     # [not win]
   host:
-    # llvm-openmp 14.0.6 added here only for intel-openmp <20.23.1 compatibility on osx-64. 
-    # Check if the issue persists with new releases
-    - llvm-openmp 14.0.6  # [osx and x86_64]
+    # This basically forces to pick scipy (and any other suitable packages in the chain, like numpy) 
+    # that was built with openblas rather than mkl. Openblas typically pairs with llvm-openmp and mkl with intel-openmp on osx-64. 
+    # By default, mkl variants are picked. By picking the variant that uses openblas rather 
+    # than mkl, intel-openmp will not be pulled in and so you will not have llvm-openmp / intel-openmp conflict. 
+    - blas=*=openblas # [osx and x86_64]
     - pip
     - poetry-core 1.5.1
     - poetry-dynamic-versioning 0.23.0
     - python
   run:
+    - blas=*=openblas # [osx and x86_64]    
     - matplotlib-base >=3.3.1
     - optuna >=2.3.0
     - pandas >=1.3.0
@@ -40,11 +43,6 @@ requirements:
     - scikit-learn >=0.24.0,<1.2
     - scipy >=1.8
     - statsmodels
-  run_constrained:
-    # intel-openmp 2023.1 and llvm-openmp 14.0.6 appear not be compatible on osx-64
-    # leading to segfault in a lot of tests.
-    # Check if the issue persists with new releases
-    - intel-openmp <2023.1  # [osx and x86_64]
 
 test:
   imports:
@@ -56,6 +54,7 @@ test:
     - networkx
     # Use numpy <1.24 to avoid error numpy hasn't np.float 
     - numpy <1.24
+    - blas=*=openblas # [osx and x86_64] 
     - pip
     - pytest
     - pyarrow
@@ -68,9 +67,9 @@ test:
     # Skip tests because of missing cpflows, also skip hyperparameter optimization tests because of `KeyError: 'radam_buffer'`, see https://discuss.pytorch.org/t/keyerror-radam-buffer/171424
     # Skip tests on s390x because of missing fastparquet and pyarrow packages.
     # Skip tests on linux-ppc64le as CI got stuck with running pytest
-    - pytest tests -vv -k "not (test_integration[multivariate-quantiles] or test_mqf2_loss or test_hyperparameter_optimization_integration[True])"  # [not (win or (linux and ppc64le))]
+    - pytest tests -v -k "not (test_integration[multivariate-quantiles] or test_mqf2_loss or test_hyperparameter_optimization_integration[True])"  # [not (win or (linux and ppc64le))]
     # Skip test_MultivariateNormalDistributionLoss and test_integration on win64: `RuntimeError: Calling torch.linalg.cholesky on a CPU tensor requires compiling PyTorch with LAPACK.` 
-    - pytest tests -vv -k "not (test_integration[multivariate-quantiles] or test_mqf2_loss or test_hyperparameter_optimization_integration[True] or test_MultivariateNormalDistributionLoss or test_integration)"  # [win]
+    - pytest tests -v -k "not (test_integration[multivariate-quantiles] or test_mqf2_loss or test_hyperparameter_optimization_integration[True] or test_MultivariateNormalDistributionLoss or test_integration)"  # [win]
 
 about:
   home: https://github.com/jdb78/pytorch-forecasting
