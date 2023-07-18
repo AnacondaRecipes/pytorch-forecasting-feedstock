@@ -90,4 +90,3 @@ extra:
     - jdb78
   skip-lints:
     - missing_wheel
-    - missing_pip_check
